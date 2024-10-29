@@ -1,0 +1,32 @@
+services:
+  nestjs_app:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    container_name: nestjs_app
+    volumes:
+      - ./:/usr/src/app
+    env_file: ../.env
+    command: npm run start:dev
+    ports:
+      - 3010:3010
+      - 9229:9229
+    networks:
+      - loki_network
+
+# postgres
+  postgres:
+    image: postgres:14-alpine
+    container_name: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - ./volumes/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=loki_password
+      - POSTGRES_USER=loki_user
+      - POSTGRES_DB=loki_db
+
+networks:
+  loki_network:
+    external: true
