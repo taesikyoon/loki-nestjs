@@ -17,7 +17,7 @@ export class AppConfig {
 
 export default () => {
   const env = {
-    NODE_ENV: process.env.NODE_ENV,
+    NODE_ENV: process.env.NODE_ENV || "local",
     APP_PORT: process.env.APP_PORT || 5010,
     API_PREFIX: process.env.API_PREFIX,
     TZ: process.env.TZ,

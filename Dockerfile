@@ -6,7 +6,7 @@ COPY package.json tsconfig.json ./
 
 RUN npm install
 
-RUN npm build
+RUN npm run build
 
 # 앱 실행
 CMD ["npm", "run", "start:dev"]

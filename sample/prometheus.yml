@@ -1,0 +1,20 @@
+# prometheus.yml
+
+global:
+  scrape_interval: 15s # 기본 수집 간격
+
+scrape_configs:
+  # Prometheus 자체 메트릭을 수집
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Grafana의 메트릭 수집 예시
+  - job_name: 'grafana'
+    static_configs:
+      - targets: ['grafana:3000']
+
+  # Loki 메트릭 수집
+  - job_name: 'loki'
+    static_configs:
+      - targets: ['loki:3100']

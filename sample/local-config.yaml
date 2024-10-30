@@ -1,0 +1,65 @@
+auth_enabled: false # 인증 비활성화
+
+server:
+  http_listen_port: 3100 # 서버가 HTTP 요청을 수신하는 포트
+
+ingester:
+  lifecycler:
+    address: 127.0.0.1 # Lifecycler의 주소
+    ring:
+      kvstore:
+        store: inmemory # 키-값 저장소를 메모리에 저장
+      replication_factor: 1 # 복제 계수
+    final_sleep: 0s # 최종 대기 시간
+  chunk_idle_period: 1h # 이 시간 동안 새 로그를 받지 않는 청크는 플러시됨
+  max_chunk_age: 1h # 모든 청크는 이 시간에 도달하면 플러시됨, 기본값은 1시간
+  chunk_target_size: 1048576 # Loki는 청크를 최대 1.5MB까지 빌드하려고 시도하며, chunk_idle_period 또는 max_chunk_age에 먼저 도달하면 플러시됨
+  chunk_retain_period: 30s # 인덱스 읽기 캐시 TTL보다 커야 함 (기본 인덱스 읽기 캐시 TTL은 5분)
+  max_transfer_retries: 0 # 청크 전송 비활성화
+  wal:
+    dir: /loki/wal # WAL(Write-Ahead Logging) 디렉토리
+
+schema_config:
+  configs:
+    - from: 2020-10-24 # 이 날짜부터 적용
+      store: boltdb-shipper # 저장소 유형
+      object_store: filesystem # 객체 저장소 유형
+      schema: v11 # 스키마 버전
+      index:
+        prefix: index_ # 인덱스 접두사
+        period: 24h # 인덱스 기간
+
+storage_config:
+  boltdb_shipper:
+    active_index_directory: /tmp/loki/boltdb-shipper-active # 활성 인덱스 디렉토리
+    cache_location: /tmp/loki/boltdb-shipper-cache # 캐시 위치
+    cache_ttl: 24h # 더 긴 쿼리 기간 동안 더 빠른 성능을 위해 증가 가능, 더 많은 디스크 공간 사용
+    shared_store: filesystem # 공유 저장소 유형
+  filesystem:
+    directory: /tmp/loki/chunks
+
+compactor:
+  working_directory: /tmp/loki/boltdb-shipper-compactor
+  shared_store: filesystem
+
+limits_config:
+  reject_old_samples: true
+  reject_old_samples_max_age: 168h
+
+chunk_store_config:
+  max_look_back_period: 0s
+
+table_manager:
+  retention_deletes_enabled: false
+  retention_period: 0s
+
+ruler:
+  storage:
+    type: local
+    local:
+      directory: /tmp/loki/rules
+  rule_path: /tmp/loki/rules-temp
+  ring:
+    kvstore:
+      store: inmemory
+  enable_api: false

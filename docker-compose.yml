@@ -6,15 +6,42 @@ services:
     container_name: nestjs_app
     volumes:
       - ./:/usr/src/app
-    env_file: ../.env
+      - loki_logs:/usr/src/app/logs
+    environment:
+      - APP_PORT=3010
+      - DOCKER_CONTAINER_NAME=nestjs_app
+    env_file: .env
     command: npm run start:dev
     ports:
       - 3010:3010
-      - 9229:9229
     networks:
       - loki_network
+    depends_on:
+      - postgres
+      - loki
 
-# postgres
+  nestjs_app-1:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    container_name: nestjs_app-1
+    volumes:
+      - ./:/usr/src/app
+      - loki_logs_1:/usr/src/app/logs
+    environment:
+      - APP_PORT=3020
+      - DOCKER_CONTAINER_NAME=nestjs_app-1
+    env_file: .env
+    command: npm run start:dev
+    ports:
+      - 3020:3020
+    networks:
+      - loki_network
+    depends_on:
+      - postgres
+      - loki
+
+  # postgres
   postgres:
     image: postgres:14-alpine
     container_name: postgres
@@ -26,7 +53,69 @@ services:
       - POSTGRES_PASSWORD=loki_password
       - POSTGRES_USER=loki_user
       - POSTGRES_DB=loki_db
+    networks:
+      - loki_network
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    user: '0'
+    volumes:
+      - ./volumes/prometheus/config:/etc/prometheus/
+      - ./volumes/prometheus/data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - 9090:9090
+    networks:
+      - loki_network
+    depends_on:
+      - loki
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    # if you are running as root then set it to 0
+    user: '0'
+    volumes:
+      - ./volumes/grafana:/var/lib/grafana
+    ports:
+      - 3000:3000
+    networks:
+      - loki_network
+
+  loki:
+    image: grafana/loki:2.9.2
+    container_name: loki
+    ports:
+      - '3100:3100'
+    volumes:
+      - ./volumes/loki/config:/etc/loki
+    networks:
+      - loki_network
+    command: -config.file=/etc/loki/local-config.yaml
+
+  promtail:
+    image: grafana/promtail
+    container_name: promtail
+    volumes:
+      - ./volumes/promtail:/etc/promtail
+      - loki_logs:/app/logs
+      - loki_logs_1:/app/logs_1
+    command: -config.file=/etc/promtail/promtail.yml
+    networks:
+      - loki_network
+    depends_on:
+      - loki
+      - nestjs_app
 
 networks:
   loki_network:
-    external: true
+    driver: bridge
+volumes:
+  loki_logs:
+    driver: local
+  loki_logs_1:
+    driver: local

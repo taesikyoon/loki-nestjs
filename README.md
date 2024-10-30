@@ -1,38 +1,71 @@
+# 서버 실행/종료
+
+- 처음 실행 시
+
+```
+./start.sh
+```
+
+- 처음 실행이 아닐 시
+
+```
+docker compose up -d
+```
+
+- 종료
+
+```
+docker compose down
+```
+
+# Log Point
+
+1. src/main.ts
+2. src/common/\*
+3. src/app.module
+
+- 로그 예시
+
+1. src/app.controller.ts
+
+로그에 디테일은 직접 구글링
+
+<details>
+<summary>애플리케이션 서버 관련 정보</summary>
 # 주요 구성
 
 1. NestJS
 1. TypeORM
-1. MySQL
+1. Postgres
 
 # 준비 사항
 
 _실행환경은 MAC_OS입니다._
 
-1. 데이터베이스 "wanted-pre-onboarding-backend"를 미리 생성해주세요.
-1. 최상위 루트에 있는 .env.sample을 .local.env로 변경하고 환경변수를 채워주세요.
 1. start.sh을 실행시키면 모든 api를 이용할 환경이 구성됩니다.
 
-## 실행 방법
-
-### 서버 환경 구성 및 서버 실행
-
-- 셀 스크립트 실행
+- 처음 실행 시
 
 ```
-sh start.sh
+./start.sh
 ```
 
-- 쉘 실행 내용 요약
+- 처음 실행이 아닐 시
 
 ```
-1. 데이터베이스 테이블을 생성합니다.
-2. 각 테이블에 테스트를 위한 seed data를 삽입합니다.
-3. NestJS Server를 실행시킵니다.
+docker compose up -d
+```
 
+- 종료
+
+```
+docker compose down
 ```
 
 ### 테스트 실행
 
+없음
+
 - 셀 스크립트 실행
 
 ```
@@ -45,7 +78,7 @@ sh start.sh
 
 ```
 
-## API Docs - localhost:4010
+## API Docs
 
 ### 1. 채용공고 생성
 
@@ -245,7 +278,6 @@ sh start.sh
   }
   ```
 
-### 10월 7일 이후 추가할 내역 리스트
-
-1. 테스트 코드 작성
-1. docker를 이용한 실행환경 구축
+```
+</details>
+```
