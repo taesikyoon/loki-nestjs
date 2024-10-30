@@ -3,7 +3,6 @@ import * as winstonDaily from 'winston-daily-rotate-file';
 import * as winston from 'winston';
 
 const isProduction = process.env['NODE_ENV'] === 'production';
-const container = process.env['DOCKER_CONTAINER_NAME'];
 const logDir = '/usr/src/app/logs';
 
 const dailyOptions = (level: string) => {
@@ -11,7 +10,7 @@ const dailyOptions = (level: string) => {
     level,
     datePattern: 'YYYY-MM-DD',
     dirname: logDir + `/${level}`,
-    filename: `${container}-%DATE%.${level}.log`,
+    filename: `%DATE%.${level}.log`,
     zippedArchive: true,
     maxSize: '20m',
     maxFiles: '14d',
