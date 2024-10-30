@@ -6,6 +6,7 @@ services:
     container_name: loki-nestjs
     volumes:
       - ../:/usr/src/app
+      - loki_logs:/usr/src/app/logs
     env_file: ../.env
     command: npm run start:dev
     ports:
@@ -16,4 +17,7 @@ services:
 
 networks:
   testnetwork:
+    external: true
+volumes:
+  loki_logs:
     external: true
