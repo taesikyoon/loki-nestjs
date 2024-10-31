@@ -22,4 +22,6 @@ mv ./sample/promtail.yml volumes/promtail/promtail.yml
 
 mv .env.sample .env
 
+npm install
+
 docker compose up -d
