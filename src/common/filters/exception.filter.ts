@@ -11,7 +11,6 @@ export class ExceptionsFilter {
   private readonly logger: Logger = new Logger();
 
   public catch(exception: unknown, host: ArgumentsHost): void {
-    let stack: unknown;
     let message = 'UNKNOWN ERROR';
 
     const ctx = host.switchToHttp();
@@ -22,7 +21,7 @@ export class ExceptionsFilter {
 
     message = exception instanceof HttpException ? exception.message : message;
     message = exception instanceof QueryFailedError ? 'Already Exist' : message;
-    message = exception instanceof Error ? exception.stack : 'Missing Error Stack';
+    const stack = exception instanceof Error ? exception.stack : 'Missing Error Stack';
 
     const errorResponse = {
       code: statusCode,
