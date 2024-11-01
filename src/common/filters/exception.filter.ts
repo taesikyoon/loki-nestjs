@@ -41,10 +41,7 @@ export class ExceptionsFilter {
   }
 
   private getHttpStatus(exception: unknown): HttpStatus {
-    if (
-      exception instanceof QueryFailedError &&
-      exception.driverError.code === MysqlErrorCode.ALREADY_EXIST
-    ) {
+    if (exception instanceof QueryFailedError && exception.driverError.code === MysqlErrorCode.ALREADY_EXIST) {
       return HttpStatus.CONFLICT;
     } else if (exception instanceof HttpException) return exception.getStatus();
     else return HttpStatus.INTERNAL_SERVER_ERROR;

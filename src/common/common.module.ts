@@ -1,8 +1,6 @@
 import { Global, Logger, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { LoggerContextMiddleware } from './middleware/logger-context.middleware';
 
-
-
 @Global()
 @Module({
   imports: [],
