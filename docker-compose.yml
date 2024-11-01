@@ -20,17 +20,17 @@ services:
       - postgres
       - loki
 
-  nestjs_app-1:
+  nestjs_app_1:
     build:
       dockerfile: Dockerfile
       context: .
-    container_name: nestjs_app-1
+    container_name: nestjs_app_1
     volumes:
       - ./:/usr/src/app
       - loki_logs_1:/usr/src/app/logs
     environment:
       - APP_PORT=3020
-      - DOCKER_CONTAINER_NAME=nestjs_app-1
+      - DOCKER_CONTAINER_NAME=nestjs_app_1
     env_file: .env
     command: npm run start:dev
     ports:
