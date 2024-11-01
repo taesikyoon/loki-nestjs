@@ -17,7 +17,7 @@ export class DataBaseConfig {
   @IsString()
   DATABASE_DB: string;
 
-  @IsIn(['mysql' , 'mariadb' , 'postgres' , 'sqlite' , 'mssql'])
+  @IsIn(['mysql', 'mariadb', 'postgres', 'sqlite', 'mssql'])
   DATABASE_TYPE: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'mssql';
 }
 

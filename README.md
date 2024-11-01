@@ -1,3 +1,16 @@
+# 설치 패키지
+
+npm i --save \
+ @nestjs/typeorm \
+ typeorm \
+ @nestjs/config \
+ class-transformer \
+ @nestjs/mapped-types \
+ class-validator \
+ nest-winston \
+ winston-daily-rotate-file \
+ winston
+
 # 서버 실행/종료
 
 - 처음 실행 시
